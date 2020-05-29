@@ -97,14 +97,21 @@ public class Empleado {
 			return t.getDuracionEstimada()*this.costoHora;
 		}
 	}
-		
-	public Boolean asignarTarea(Tarea t) {
+	
+	/**
+	 * 
+	 * @param t
+	 * @return
+	 * @throws AsignacionTareaException
+	 */
+	public Boolean asignarTarea(Tarea t) throws AsignacionTareaException {
 		try {
 			t.asignarEmpleado(this);
 		} catch (Exception e) {
-			System.out.println("Error al asignar tarea: " + e.getMessage());
+			throw new AsignacionTareaException(e.getMessage());
+//			System.out.println("Error al asignar tarea: " + e.getMessage());
 //			e.printStackTrace();
-			return false;
+//			return false;
 		}
 		if(this.puedeAsignarTarea.test(t)) {
 			this.tareasAsignadas.add(t);

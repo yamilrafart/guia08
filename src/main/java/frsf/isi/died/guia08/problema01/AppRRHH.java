@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import frsf.isi.died.guia08.problema01.modelo.AsignacionTareaException;
 import frsf.isi.died.guia08.problema01.modelo.Empleado;
 import frsf.isi.died.guia08.problema01.modelo.Empleado.Tipo;
 import frsf.isi.died.guia08.problema01.modelo.Tarea;
@@ -35,10 +36,27 @@ public class AppRRHH {
 		this.empleados.add(new Empleado(cuil, nombre, Tipo.EFECTIVO, costoHora));
 	}
 	
+	/**
+	 * crear un empleado
+	 * con el método buscarEmpleado() de esta clase
+	 * agregarlo a la lista	
+	 * @param cuil
+	 * @param idTarea
+	 * @param descripcion
+	 * @param duracionEstimada
+	 */
 	public void asignarTarea(Integer cuil,Integer idTarea,String descripcion,Integer duracionEstimada) {
-		// crear un empleado
-		// con el método buscarEmpleado() de esta clase
-		// agregarlo a la lista		
+		Empleado empleado = this.buscarEmpleado((Empleado e1)->e1.getCuil().equals(cuil)).orElse(null);
+		if (empleado != null) {
+			Tarea t = new Tarea(idTarea, descripcion, duracionEstimada);
+			try {
+				empleado.asignarTarea(t);
+			} catch (AsignacionTareaException e) {
+				System.out.println("Error al asignar tarea: " +e.getMessage());
+//				e.printStackTrace();
+			}
+			
+		}
 	}
 	
 	public void empezarTarea(Integer cuil,Integer idTarea) {
