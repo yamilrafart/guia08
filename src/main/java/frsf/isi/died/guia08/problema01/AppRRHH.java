@@ -24,9 +24,15 @@ public class AppRRHH {
 		this.empleados.add(new Empleado(cuil, nombre, Tipo.CONTRATADO, costoHora));
 	}
 	
+	/**
+	 * crear un empleado
+	 * agregarlo a la lista 
+	 * @param cuil
+	 * @param nombre
+	 * @param costoHora
+	 */
 	public void agregarEmpleadoEfectivo(Integer cuil,String nombre,Double costoHora) {
-		// crear un empleado
-		// agregarlo a la lista		
+		this.empleados.add(new Empleado(cuil, nombre, Tipo.EFECTIVO, costoHora));
 	}
 	
 	public void asignarTarea(Integer cuil,Integer idTarea,String descripcion,Integer duracionEstimada) {
