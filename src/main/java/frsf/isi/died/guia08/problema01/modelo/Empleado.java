@@ -113,10 +113,14 @@ public class Empleado {
 		}
 	}
 	
-	public void comenzar(Integer idTarea) {
-		// busca la tarea en la lista de tareas asignadas 
-		// si la tarea no existe lanza una excepción
-		// si la tarea existe indica como fecha de inicio la fecha y hora actual
+	/**
+	 * busca la tarea en la lista de tareas asignadas 
+	 * si la tarea no existe lanza una excepción
+	 * si la tarea existe indica como fecha de inicio la fecha y hora actual
+	 */
+	public void comenzar(Integer idTarea) throws TareaInexistenteException{
+		Tarea t = this.tareasAsignadas.stream().filter((Tarea t1)->t1.getId()==idTarea).findFirst().orElseThrow(()->new TareaInexistenteException("Tarea inexistente."));
+		t.setFechaInicio(LocalDateTime.now());
 	}
 	
 	public void finalizar(Integer idTarea) {
