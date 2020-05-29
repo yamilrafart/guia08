@@ -3,6 +3,7 @@ package frsf.isi.died.guia08.problema01.modelo;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -118,6 +119,7 @@ public class Empleado {
 	 * si la tarea no existe lanza una excepción
 	 * si la tarea existe indica como fecha de inicio la fecha y hora actual
 	 * @param idTarea
+	 * @throws TareaInexistenteException 
 	 */
 	public void comenzar(Integer idTarea) throws TareaInexistenteException {
 		Tarea t = this.tareasAsignadas.stream().filter((Tarea t1)->t1.getId()==idTarea).findFirst().orElseThrow(()->new TareaInexistenteException("Tarea inexistente."));
@@ -129,16 +131,25 @@ public class Empleado {
 	 * si la tarea no existe lanza una excepción
 	 * si la tarea existe indica como fecha de finalizacion la fecha y hora actua
 	 * @param idTarea
+	 * @throws TareaInexistenteException 
 	 */
 	public void finalizar(Integer idTarea) throws TareaInexistenteException {
 		Tarea t = this.tareasAsignadas.stream().filter((Tarea t1)->t1.getId()==idTarea).findFirst().orElseThrow(()->new TareaInexistenteException("Tarea inexistente."));
 		t.setFechaFin(LocalDateTime.now());
 	}
 
-	public void comenzar(Integer idTarea,String fecha) {
-		// busca la tarea en la lista de tareas asignadas 
-		// si la tarea no existe lanza una excepción
-		// si la tarea existe indica como fecha de finalizacion la fecha y hora actual
+	/**
+	 * busca la tarea en la lista de tareas asignadas 
+	 * si la tarea no existe lanza una excepción
+	 * si la tarea existe indica como fecha de inicio la fecha y hora actual 
+	 * @param idTarea
+	 * @param fecha
+	 * @throws TareaInexistenteException 
+	 */
+	public void comenzar(Integer idTarea,String fecha) throws TareaInexistenteException {
+		Tarea t = this.tareasAsignadas.stream().filter((Tarea t1)->t1.getId()==idTarea).findFirst().orElseThrow(()->new TareaInexistenteException("Tarea inexistente."));
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("DD-MM-YYYY HH:MM");
+		t.setFechaInicio(LocalDateTime.parse(fecha, formato));		
 	}
 	
 	public void finalizar(Integer idTarea,String fecha) {
