@@ -1,5 +1,9 @@
 package frsf.isi.died.guia08.problema01;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -94,9 +98,22 @@ public class AppRRHH {
 		}
 	}
 
+	/**
+	 * leer datos del archivo
+	 * por cada fila invocar a agregarEmpleadoContratado
+	 * @param nombreArchivo
+	 */
 	public void cargarEmpleadosContratadosCSV(String nombreArchivo) {
-		// leer datos del archivo
-		// por cada fila invocar a agregarEmpleadoContratado
+		try (BufferedReader rd = new BufferedReader(new FileReader(nombreArchivo))) {
+				String inputLine = null;
+				while((inputLine = rd.readLine()) != null) {
+					String[] s = inputLine.split(";");
+					this.agregarEmpleadoContratado(Integer.valueOf(s[0]),s[1],Double.valueOf(s[2]));
+				}
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+//			e.printStackTrace();
+		}
 	}
 
 	public void cargarEmpleadosEfectivosCSV(String nombreArchivo) {
