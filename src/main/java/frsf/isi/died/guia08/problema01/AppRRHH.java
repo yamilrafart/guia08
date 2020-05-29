@@ -6,15 +6,22 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import frsf.isi.died.guia08.problema01.modelo.Empleado;
+import frsf.isi.died.guia08.problema01.modelo.Empleado.Tipo;
 import frsf.isi.died.guia08.problema01.modelo.Tarea;
 
 public class AppRRHH {
 
 	private List<Empleado> empleados;
 	
+	/**
+	 * crear un empleado
+	 * agregarlo a la lista
+	 * @param cuil
+	 * @param nombre
+	 * @param costoHora
+	 */
 	public void agregarEmpleadoContratado(Integer cuil,String nombre,Double costoHora) {
-		// crear un empleado
-		// agregarlo a la lista
+		this.empleados.add(new Empleado(cuil, nombre, Tipo.CONTRATADO, costoHora));
 	}
 	
 	public void agregarEmpleadoEfectivo(Integer cuil,String nombre,Double costoHora) {
