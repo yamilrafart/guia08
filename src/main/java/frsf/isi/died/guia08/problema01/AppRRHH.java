@@ -116,9 +116,22 @@ public class AppRRHH {
 		}
 	}
 
+	/**
+	 * leer datos del archivo
+	 * por cada fila invocar a agregarEmpleadoContratado 
+	 * @param nombreArchivo
+	 */
 	public void cargarEmpleadosEfectivosCSV(String nombreArchivo) {
-		// leer datos del archivo
-		// por cada fila invocar a agregarEmpleadoContratado		
+		try (BufferedReader rd = new BufferedReader(new FileReader(nombreArchivo))) {
+			String inputLine = null;
+			while((inputLine = rd.readLine()) != null) {
+				String[] s = inputLine.split(";");
+				this.agregarEmpleadoEfectivo(Integer.valueOf(s[0]),s[1],Double.valueOf(s[2]));
+			}
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+//			e.printStackTrace();
+		}		
 	}
 
 	public void cargarTareasCSV(String nombreArchivo) {
