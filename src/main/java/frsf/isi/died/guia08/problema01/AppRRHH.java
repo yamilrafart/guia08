@@ -9,6 +9,7 @@ import frsf.isi.died.guia08.problema01.modelo.AsignacionTareaException;
 import frsf.isi.died.guia08.problema01.modelo.Empleado;
 import frsf.isi.died.guia08.problema01.modelo.Empleado.Tipo;
 import frsf.isi.died.guia08.problema01.modelo.Tarea;
+import frsf.isi.died.guia08.problema01.modelo.TareaInexistenteException;
 
 public class AppRRHH {
 
@@ -59,10 +60,21 @@ public class AppRRHH {
 		}
 	}
 	
+	/**
+	 * busca el empleado por cuil en la lista de empleados
+	 * con el método buscarEmpleado() actual de esta clase
+	 * e invoca al método comenzar tarea
+	 * @param cuil
+	 * @param idTarea
+	 */
 	public void empezarTarea(Integer cuil,Integer idTarea) {
-		// busca el empleado por cuil en la lista de empleados
-		// con el método buscarEmpleado() actual de esta clase
-		// e invoca al método comenzar tarea
+		Empleado empleado = this.buscarEmpleado((Empleado e1)->e1.getCuil().equals(cuil)).orElse(null);
+		try {
+			empleado.comenzar(idTarea);
+		} catch (TareaInexistenteException e) {
+			System.out.println("Error al empezar tarea: " +e.getMessage());
+//			e.printStackTrace();
+		}
 	}
 	
 	public void terminarTarea(Integer cuil,Integer idTarea) {
