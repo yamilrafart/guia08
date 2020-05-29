@@ -77,9 +77,21 @@ public class AppRRHH {
 		}
 	}
 	
+	/**
+	 * busca el empleado por cuil en la lista de empleados
+	 * con el método buscarEmpleado() actual de esta clase
+	 * e invoca al método finalizar tarea
+	 * @param cuil
+	 * @param idTarea
+	 */
 	public void terminarTarea(Integer cuil,Integer idTarea) {
-		// crear un empleado
-		// agregarlo a la lista		
+		Empleado empleado = this.buscarEmpleado((Empleado e1)->e1.getCuil().equals(cuil)).orElse(null);
+		try {
+			empleado.finalizar(idTarea);
+		} catch (TareaInexistenteException e) {
+			System.out.println("Error al empezar tarea: " +e.getMessage());
+//			e.printStackTrace();
+		}
 	}
 
 	public void cargarEmpleadosContratadosCSV(String nombreArchivo) {
