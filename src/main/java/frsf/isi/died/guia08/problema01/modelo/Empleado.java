@@ -45,14 +45,23 @@ public class Empleado {
 		this.tipo = tipo;
 		this.costoHora = costoHora;
 		this.tareasAsignadas = new ArrayList<Tarea>();
-		this.puedeAsignarTarea = (Tarea t) -> t.getEmpleadoAsignado() == null && t.getFechaFin() == null;
+		switch (this.tipo) {
+		case CONTRATADO:
+			this.puedeAsignarTarea = (Tarea t1)->this.tareasAsignadas.stream().filter((Tarea t2)->t2.getFechaFin()==null).count()<=5;
+			break;
+		case EFECTIVO:
+			this.puedeAsignarTarea = (Tarea t1)->this.tareasAsignadas.stream().filter((Tarea t2)->t2.getFechaFin()==null).mapToInt((Tarea t4)->t4.getDuracionEstimada()).sum()<=15;
+			break;
+		}
 	}
 
 	public Double salario() {
 		// cargar todas las tareas no facturadas
 		// calcular el costo
 		// marcarlas como facturadas.
-		return 0.0;
+		List<Tarea>tareasNoFacturadas = this.tareasAsignadas.stream().filter((Tarea t)->!t.getFacturada()).collect(Collectors.toList());
+		tareasNoFacturadas.stream().forEach((Tarea t)->t.setFacturada(true));
+		return tareasNoFacturadas.stream().mapToDouble((Tarea t)->this.costoTarea(t)).sum();
 	}
 	
 	/**
@@ -62,33 +71,23 @@ public class Empleado {
 	 * @return
 	 */
 	public Double costoTarea(Tarea t) {
+		
 		return 0.0;
 	}
 		
-	public Boolean asignarTarea(Tarea t) throws Exception {
-		LocalDateTime ahora = LocalDateTime.now();
-		switch (this.tipo) {
-		case CONTRATADO:
-			if(this.tareasAsignadas.stream().filter((Tarea t1)-> t1.getFechaFin().isBefore(ahora)).count()>=5) {
-				return false;
-			}
-//			break;
-		case EFECTIVO:
-			Integer horasEstimadas = 0;
-			for (Tarea unaTarea : this.tareasAsignadas.stream().filter((Tarea t1)-> t1.getFechaFin().isBefore(ahora)).collect(Collectors.toList())) {
-				horasEstimadas += unaTarea.getDuracionEstimada();
-			}
-			if(horasEstimadas >= 15) {
-				return false;
-			}
-//			break;
+	public Boolean asignarTarea(Tarea t) {
+		try {
+			t.asignarEmpleado(this);
+		} catch (Exception e) {
+			System.out.println("Error al asignar tarea: " + e.getMessage());
+//			e.printStackTrace();
+			return false;
 		}
 		if(this.puedeAsignarTarea.test(t)) {
 			this.tareasAsignadas.add(t);
-			t.asignarEmpleado(this);
 			return true;
 		} else {
-			throw new AsignacionTareaException("La tarea ya tiene yn empleado asignado y/o ya fue finalizada.");
+			return false;
 		}
 	}
 	
@@ -116,6 +115,9 @@ public class Empleado {
 		// si la tarea existe indica como fecha de finalizacion la fecha y hora actual
 	}
 
+	
+	
+	//GETTERS - SETTERS
 	/**
 	 * @return the cuil
 	 */
@@ -213,7 +215,5 @@ public class Empleado {
 	public void setPuedeAsignarTarea(Predicate<Tarea> puedeAsignarTarea) {
 		this.puedeAsignarTarea = puedeAsignarTarea;
 	}
-	
-	
 	
 }

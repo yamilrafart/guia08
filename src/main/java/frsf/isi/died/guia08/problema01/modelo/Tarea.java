@@ -38,11 +38,17 @@ public class Tarea {
 		this.facturada = false;
 	}
 
-	public void asignarEmpleado(Empleado e) {
+	public void asignarEmpleado(Empleado e) throws Exception{
 		// si la tarea ya tiene un empleado asignado
 		// y tiene fecha de finalizado debe lanzar una excepcion
+		if (this.empleadoAsignado != null || this.fechaFin != null) {
+			throw new AsignacionTareaException("La tarea ya tiene un empleado asignado y/o ya fue finalizada.");
+		}
 	}
 
+	
+	
+	//GETTERS - SETTERS
 	/**
 	 * @return the id
 	 */
