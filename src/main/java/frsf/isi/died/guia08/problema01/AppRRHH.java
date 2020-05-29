@@ -134,10 +134,23 @@ public class AppRRHH {
 		}		
 	}
 
+	/**
+	 * leer datos del archivo
+	 * cada fila del archivo tendrá:
+	 * cuil del empleado asignado, numero de la taera, descripcion y duración estimada en horas.
+	 * @param nombreArchivo
+	 */
 	public void cargarTareasCSV(String nombreArchivo) {
-		// leer datos del archivo
-		// cada fila del archivo tendrá:
-		// cuil del empleado asignado, numero de la taera, descripcion y duración estimada en horas.
+		try (BufferedReader rd = new BufferedReader(new FileReader(nombreArchivo))) {
+			String inputLine = null;
+			while((inputLine = rd.readLine()) != null) {
+				String[] s = inputLine.split(";");
+				this.asignarTarea(Integer.valueOf(s[3]), Integer.valueOf(s[0]),s[1],Integer.valueOf(s[2]));
+			}
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+//			e.printStackTrace();
+		}
 	}
 	
 	private void guardarTareasTerminadasCSV() {
