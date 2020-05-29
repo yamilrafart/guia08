@@ -1,5 +1,6 @@
 package frsf.isi.died.guia08.problema01.modelo;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public class Empleado {
 	 */
 	public Empleado() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -48,31 +48,53 @@ public class Empleado {
 		switch (this.tipo) {
 		case CONTRATADO:
 			this.puedeAsignarTarea = (Tarea t1)->this.tareasAsignadas.stream().filter((Tarea t2)->t2.getFechaFin()==null).count()<=5;
+			this.calculoPagoPorTarea = (Tarea t)->{
+				if (t.finalizaAntes()) {
+					return t.horasTrabajadas()*this.costoHora*1.3;
+				} else if (t.finalizaDespues()) {
+					return t.horasTrabajadas()*this.costoHora*0.75;
+				}
+				return t.horasTrabajadas()*this.costoHora;
+			};
 			break;
 		case EFECTIVO:
 			this.puedeAsignarTarea = (Tarea t1)->this.tareasAsignadas.stream().filter((Tarea t2)->t2.getFechaFin()==null).mapToInt((Tarea t4)->t4.getDuracionEstimada()).sum()<=15;
+			this.calculoPagoPorTarea = (Tarea t)->{
+				if (t.finalizaAntes()) {
+					return t.horasTrabajadas()*this.costoHora*1.2;
+				}
+				return t.horasTrabajadas()*this.costoHora;
+		};
 			break;
 		}
 	}
 
+	
+	
+	/**
+	 * cargar todas las tareas no facturadas
+	 * calcular el costo
+	 * marcarlas como facturadas.
+	 * @return
+	 */
 	public Double salario() {
-		// cargar todas las tareas no facturadas
-		// calcular el costo
-		// marcarlas como facturadas.
 		List<Tarea>tareasNoFacturadas = this.tareasAsignadas.stream().filter((Tarea t)->!t.getFacturada()).collect(Collectors.toList());
 		tareasNoFacturadas.stream().forEach((Tarea t)->t.setFacturada(true));
 		return tareasNoFacturadas.stream().mapToDouble((Tarea t)->this.costoTarea(t)).sum();
 	}
 	
 	/**
-	 * Si la tarea ya fue terminada nos indica cuaal es el monto según el algoritmo de calculoPagoPorTarea
+	 * Si la tarea ya fue terminada nos indica cual es el monto según el algoritmo de calculoPagoPorTarea
 	 * Si la tarea no fue terminada simplemente calcula el costo en base a lo estimado.
 	 * @param t
 	 * @return
 	 */
 	public Double costoTarea(Tarea t) {
-		
-		return 0.0;
+		if (t.getFechaFin()!=null) {
+			return this.calculoPagoPorTarea.apply(t);
+		} else {
+			return t.getDuracionEstimada()*this.costoHora;
+		}
 	}
 		
 	public Boolean asignarTarea(Tarea t) {
@@ -117,7 +139,9 @@ public class Empleado {
 
 	
 	
-	//GETTERS - SETTERS
+	/**
+	 * GETTERS && SETTERS
+	 */
 	/**
 	 * @return the cuil
 	 */

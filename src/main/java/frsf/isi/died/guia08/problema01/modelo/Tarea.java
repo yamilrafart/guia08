@@ -1,5 +1,6 @@
 package frsf.isi.died.guia08.problema01.modelo;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Tarea {
@@ -19,11 +20,8 @@ public class Tarea {
 	 */
 	public Tarea() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
-	
-
 	/**
 	 * CONTRUCTOR CAMPOS
 	 * @param id
@@ -38,17 +36,65 @@ public class Tarea {
 		this.facturada = false;
 	}
 
+	
+	
+	/**
+	 * si la tarea ya tiene un empleado asignado
+	 * y tiene fecha de finalizado debe lanzar una excepcion
+	 * @param e
+	 */
 	public void asignarEmpleado(Empleado e) throws Exception{
-		// si la tarea ya tiene un empleado asignado
-		// y tiene fecha de finalizado debe lanzar una excepcion
 		if (this.empleadoAsignado != null || this.fechaFin != null) {
 			throw new AsignacionTareaException("La tarea ya tiene un empleado asignado y/o ya fue finalizada.");
 		}
 	}
+	
+	/**
+	 * Para determinar esto se calcula la diferencia en días,
+	 * entre la fecha de inicio y la fecha final de la tarea, y se multiplica
+	 * por 4 horas teóricas de trabajo diaria.
+	 * @return
+	 */
+	public Boolean finalizaAntes() {
+		LocalDateTime fechaFinEstimada = this.fechaInicio.plusDays(this.duracionEstimada/4);
+//		if (fechaFinEstimada.getDayOfMonth()-this.fechaFin.getDayOfMonth()>0) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		return Duration.between(fechaFinEstimada,this.fechaFin).toDays()<0;
+	}
+	
+	/**
+	 * Para determinar esto se calcula la diferencia en días,
+	 * entre la fecha de inicio y la fecha final de la tarea, y se multiplica
+	 * por 4 horas teóricas de trabajo diaria.
+	 * DEMORA MAS DE 2 DIAS
+	 * @return
+	 */
+	public Boolean finalizaDespues() {
+		LocalDateTime fechaFinEstimada = this.fechaInicio.plusDays(this.duracionEstimada/4);
+//		if (fechaFinEstimada.getDayOfMonth()-this.fechaFin.getDayOfMonth()<0) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		return Duration.between(fechaFinEstimada,this.fechaFin).toDays()>2;
+	}
+	
+	/**
+	 * Retorna la cantidad de hs que trabajo el empleado en esta tarea.
+	 * @return
+	 */
+	public Double horasTrabajadas() {
+		return Duration.between(this.getFechaInicio(), this.getFechaFin()).toDays()*4D;
+	}
 
 	
 	
-	//GETTERS - SETTERS
+	/**
+	 * GETTERS && SETTERS
+	 */
 	/**
 	 * @return the id
 	 */
