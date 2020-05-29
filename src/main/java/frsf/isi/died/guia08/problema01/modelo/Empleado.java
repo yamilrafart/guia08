@@ -172,12 +172,13 @@ public class Empleado {
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("DD-MM-YYYY HH:MM");
 		t.setFechaFin(LocalDateTime.parse(fecha, formato));
 	}
-
+	
 	
 	
 	/**
 	 * GETTERS && SETTERS
 	 */
+	
 	/**
 	 * @return the cuil
 	 */

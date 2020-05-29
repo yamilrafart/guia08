@@ -1,13 +1,18 @@
 package frsf.isi.died.guia08.problema01;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import frsf.isi.died.guia08.problema01.modelo.AsignacionTareaException;
 import frsf.isi.died.guia08.problema01.modelo.Empleado;
@@ -153,16 +158,39 @@ public class AppRRHH {
 		}
 	}
 	
+	/**
+	 * guarda una lista con los datos de la tarea que fueron terminadas
+	 * y todavía no fueron facturadas
+	 * y el nombre y cuil del empleado que la finalizó en formato CSV 
+	 */
 	private void guardarTareasTerminadasCSV() {
-		// guarda una lista con los datos de la tarea que fueron terminadas
-		// y todavía no fueron facturadas
-		// y el nombre y cuil del empleado que la finalizó en formato CSV 
+		try(BufferedWriter bf=new BufferedWriter(new FileWriter("tareasTerminadasNoFacturar.csv"))) {
+			for (Empleado empleado : this.empleados) {
+				for (Tarea tarea : empleado.getTareasAsignadas()) {
+					if (!tarea.getFacturada() && tarea.getFechaFin()!=null) {
+						bf.write(tarea.asCsv()+System.getProperty("line.separator"));
+					}
+				}
+			}
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+//			e.printStackTrace();
+		}
 	}
 	
+	/**
+	 * 
+	 * @param p
+	 * @return
+	 */
 	private Optional<Empleado> buscarEmpleado(Predicate<Empleado> p){
 		return this.empleados.stream().filter(p).findFirst();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Double facturar() {
 		this.guardarTareasTerminadasCSV();
 		return this.empleados.stream()				

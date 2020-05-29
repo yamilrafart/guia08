@@ -90,6 +90,14 @@ public class Tarea {
 		return Duration.between(this.getFechaInicio(), this.getFechaFin()).toDays()*4D;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public String asCsv() {
+		return this.id + ";\"" + this.descripcion + ";\"" + this.duracionEstimada + ";\"" + this.empleadoAsignado.getCuil();
+	}
+	
 	
 	
 	/**
