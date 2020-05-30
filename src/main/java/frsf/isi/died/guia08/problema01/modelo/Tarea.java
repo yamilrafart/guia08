@@ -3,7 +3,7 @@ package frsf.isi.died.guia08.problema01.modelo;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class Tarea {
+public class Tarea implements Comparable<Tarea> {
 
 	private Integer id;
 	private String descripcion;
@@ -46,6 +46,8 @@ public class Tarea {
 	public void asignarEmpleado(Empleado e) throws Exception{
 		if (this.empleadoAsignado != null || this.fechaFin != null) {
 			throw new AsignacionTareaException("La tarea ya tiene un empleado asignado y/o ya fue finalizada.");
+		}else{
+			this.empleadoAsignado = e;
 		}
 	}
 	
@@ -57,11 +59,6 @@ public class Tarea {
 	 */
 	public Boolean finalizaAntes() {
 		LocalDateTime fechaFinEstimada = this.fechaInicio.plusDays(this.duracionEstimada/4);
-//		if (fechaFinEstimada.getDayOfMonth()-this.fechaFin.getDayOfMonth()>0) {
-//			return true;
-//		} else {
-//			return false;
-//		}
 		return Duration.between(fechaFinEstimada,this.fechaFin).toDays()<0;
 	}
 	
@@ -74,11 +71,6 @@ public class Tarea {
 	 */
 	public Boolean finalizaDespues() {
 		LocalDateTime fechaFinEstimada = this.fechaInicio.plusDays(this.duracionEstimada/4);
-//		if (fechaFinEstimada.getDayOfMonth()-this.fechaFin.getDayOfMonth()<0) {
-//			return true;
-//		} else {
-//			return false;
-//		}
 		return Duration.between(fechaFinEstimada,this.fechaFin).toDays()>2;
 	}
 	
@@ -96,6 +88,26 @@ public class Tarea {
 	 */
 	public String asCsv() {
 		return this.id + ";\"" + this.descripcion + ";\"" + this.duracionEstimada + ";\"" + this.empleadoAsignado.getCuil();
+	}
+	
+	/**
+	 * compareTo
+	 */
+	@Override
+	public int compareTo(Tarea t) {
+		return this.id-t.id;
+	}
+	
+	/**
+	 * equals
+	 * @param t
+	 * @return
+	 */
+	public boolean equals(Tarea t) {
+		return this.id.equals(t.id) 
+		&& this.descripcion.equals(t.descripcion) 
+		&& this.duracionEstimada.equals(t.duracionEstimada) 
+		&& this.facturada.equals(t.facturada);
 	}
 	
 	

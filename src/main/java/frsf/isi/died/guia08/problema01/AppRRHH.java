@@ -2,17 +2,13 @@ package frsf.isi.died.guia08.problema01;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import frsf.isi.died.guia08.problema01.modelo.AsignacionTareaException;
 import frsf.isi.died.guia08.problema01.modelo.Empleado;
@@ -24,6 +20,18 @@ public class AppRRHH {
 
 	private List<Empleado> empleados;
 	
+	
+		
+	/**
+	 * CONSTRUCTOR BASE
+	 */
+	public AppRRHH() {
+		super();
+		this.empleados= new ArrayList<Empleado>();
+	}
+
+
+
 	/**
 	 * crear un empleado
 	 * agregarlo a la lista
@@ -197,4 +205,42 @@ public class AppRRHH {
 				.mapToDouble(e -> e.salario())
 				.sum();
 	}
+
+	/**
+	 * 
+	 * @param listaEmpleados
+	 * @return
+	 */
+	public Boolean empleadosIgualA (List<Empleado> listaEmpleados) {
+		this.empleados.sort((e1,e2)->(e1.compareTo(e2)));
+		listaEmpleados.sort((e1,e2)->(e1.compareTo(e2)));
+		for(int i=0; i<listaEmpleados.size();i++) {
+			if(!empleados.get(i).equals(listaEmpleados.get(i))) {
+				System.out.println(empleados.get(i).equals(listaEmpleados.get(i)));
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	
+	
+	/**
+	 * GETTERS && SETERS
+	 */
+	
+	/**
+	 * @return the empleados
+	 */
+	public List<Empleado> getEmpleados() {
+		return empleados;
+	}
+
+	/**
+	 * @param empleados the empleados to set
+	 */
+	public void setEmpleados(List<Empleado> empleados) {
+		this.empleados = empleados;
+	}
+	
 }

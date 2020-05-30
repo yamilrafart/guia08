@@ -1,7 +1,5 @@
 package frsf.isi.died.guia08.problema01.modelo;
 
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,7 +8,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class Empleado {
+public class Empleado implements Comparable<Empleado> {
 
 	public enum Tipo {CONTRATADO,EFECTIVO}; 
 	
@@ -68,10 +66,10 @@ public class Empleado {
 		};
 			break;
 		}
-	}
+	}	
+	
+	
 
-	
-	
 	/**
 	 * cargar todas las tareas no facturadas
 	 * calcular el costo
@@ -99,7 +97,6 @@ public class Empleado {
 	}
 	
 	/**
-	 * 
 	 * @param t
 	 * @return
 	 * @throws AsignacionTareaException
@@ -109,9 +106,7 @@ public class Empleado {
 			t.asignarEmpleado(this);
 		} catch (Exception e) {
 			throw new AsignacionTareaException(e.getMessage());
-//			System.out.println("Error al asignar tarea: " + e.getMessage());
 //			e.printStackTrace();
-//			return false;
 		}
 		if(this.puedeAsignarTarea.test(t)) {
 			this.tareasAsignadas.add(t);
@@ -155,7 +150,7 @@ public class Empleado {
 	 */
 	public void comenzar(Integer idTarea,String fecha) throws TareaInexistenteException {
 		Tarea t = this.tareasAsignadas.stream().filter((Tarea t1)->t1.getId()==idTarea).findFirst().orElseThrow(()->new TareaInexistenteException("Tarea inexistente."));
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("DD-MM-YYYY HH:MM");
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 		t.setFechaInicio(LocalDateTime.parse(fecha, formato));		
 	}
 	
@@ -169,9 +164,30 @@ public class Empleado {
 	 */
 	public void finalizar(Integer idTarea,String fecha) throws TareaInexistenteException {
 		Tarea t = this.tareasAsignadas.stream().filter((Tarea t1)->t1.getId()==idTarea).findFirst().orElseThrow(()->new TareaInexistenteException("Tarea inexistente."));
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("DD-MM-YYYY HH:MM");
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 		t.setFechaFin(LocalDateTime.parse(fecha, formato));
 	}
+	
+	/**
+	 * compareTo
+	 */
+	@Override
+	public int compareTo(Empleado e) {
+		return this.cuil-e.cuil;
+	}
+	
+	/**
+	 * equals
+	 * @param e
+	 * @return
+	 */
+	public boolean equals(Empleado e) {
+		return this.cuil.equals(e.cuil) 
+		&& this.tipo.equals(e.tipo) 
+		&& this.nombre.equals(e.nombre) 
+		&& this.costoHora.equals(e.costoHora);
+	}
+	
 	
 	
 	
